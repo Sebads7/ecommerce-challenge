@@ -8,13 +8,19 @@ import { FetchCart } from "../lib/fetchCart";
 import MobileSVGBtn from "../../public/images/icon-menu.svg";
 import MySvgClose from "../../public/images/icon-close.svg";
 
-const NavBar = ({
-  cartItems,
-  setCartItems,
-}: {
-  cartItems: any;
-  setCartItems: Function;
-}) => {
+interface CartItem {
+  title: string;
+  price: number;
+  count: number;
+  image: string;
+}
+
+interface NavBarProps {
+  cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ cartItems, setCartItems }) => {
   const [showCart, setShowCart] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);

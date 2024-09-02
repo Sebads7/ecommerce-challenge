@@ -6,7 +6,19 @@ import MySvgClose from "../../public/images/icon-close.svg";
 import SVGRight from "../../public/images/icon-next.svg";
 import SVGLeft from "../../public/images/icon-previous.svg";
 
-const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
+interface CartItem {
+  title: string;
+  price: number;
+  count: number;
+  image: string;
+}
+
+interface HeroProps {
+  cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
+}
+
+const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [price, setPrice] = useState(125);
@@ -84,8 +96,8 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
   };
 
   return (
-    <div className="h-[100dvh]  ">
-      <div className="md:container md:mx-auto md:grid lg:grid-cols-2 w-full  ">
+    <div className="  ">
+      <div className="md:container md:mx-auto md:grid lg:grid-cols-2 w-full  lg:h-[120vh]  ">
         {/* LEFT SECTION */}
         <div className="2xl:pl-32 lg:pl-5  lg:pr-0 md:pr-14  md:ml-10 lg:ml-0 sm:pt-24 w-full ">
           <div className="grid grid-cols-4  lg:grid-rows-2 gap-8 relative  xs:w-full lg:w-[80%] ">
@@ -98,7 +110,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
                 <SVGRight className="pt-4 pl-5 w-14 h-14 rounded-full bg-white hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
               </div>
             </div>
-            <div className=" w-full h-[30rem] col-span-4 lg:row-span-1 md:rounded-xl ">
+            <div className=" w-full h-[30rem]  col-span-4 lg:row-span-1 md:rounded-xl ">
               <Image
                 src={collections[0]?.LargeImages?.[activeIndex]}
                 width={1000}
@@ -136,7 +148,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
         {collections.map((item, index) => (
           <div
             key={index}
-            className=" h-[100vh] xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 xs:ml-0 sm:ml-10 lg:ml-0  "
+            className="xs:h-[60vh]  xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 xs:ml-0 sm:ml-10 lg:ml-0  "
           >
             <p className="text-dark-grayish-blue font-semibold">
               SNEAKER COMPANY
