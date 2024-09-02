@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NAV_LINKS } from "../constants";
 import Link from "next/link";
 import Image from "next/image";
+import { FetchCart } from "../lib/fetchCart";
+import MobileSVGBtn from "../../public/images/icon-menu.svg";
 
 const NavBar = ({
   cartItems,
@@ -14,22 +16,52 @@ const NavBar = ({
 }) => {
   const [showCart, setShowCart] = useState(false);
 
-  const handleDeleteItem = (item: any) => {
-    setCartItems((prevItems: any[]) => {
-      return prevItems.filter((cartItems) => cartItems.title !== item.title);
-    });
+  useEffect(() => {
+    const getCartItems = async () => {
+      try {
+        const data = await FetchCart();
+        setCartItems(data.data);
+      } catch (error) {
+        console.error("An error occurred while fetching the cart items");
+      }
+    };
+
+    getCartItems();
+  }, [setCartItems]);
+
+  const handleDeleteItem = async (item: any) => {
+    try {
+      const response = await fetch(`/api/cart/${item._id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("An error occurred while deleting the cart item");
+      }
+
+      setCartItems(
+        cartItems.filter((cartItem: any) => cartItem._id !== item._id)
+      );
+    } catch (error) {
+      console.error("An error occurred while deleting the cart item");
+    }
   };
 
   return (
-    <div className="  py-8 ml-36 mr-40   border-b-[.1px] border-grayish-blue ">
-      <div className="container flex justify-center  items-center  mx-auto gap-14">
-        <div className=" ">
-          <Image src="/images/logo.svg" alt="Logo" width={155} height={155} />
+    <div className=" py-8 lg:ml-36 lg:mr-40   lg:border-b-[.1px] lg:border-grayish-blue  ">
+      <div className="sm:container flex justify-center  items-center  md:mx-auto xs:gap-3 lg:gap-14  ">
+        {/* MOBILE MENU */}
+        <div className="pl-7 pr-2">
+          <MobileSVGBtn />
+        </div>
+        {/* LOGO */}
+        <div className="w-full  ">
+          <Image src="/images/logo.svg" alt="Logo" width={155} height={25} />
         </div>
 
         <nav className="flex  justify-between items-center w-full text-dark-grayish-blue font-light ">
           {/* LEFT NAV */}
-          <div className="">
+          <div className="xs:hidden md:block">
             <ul className="flex gap-7 ">
               {NAV_LINKS.slice(1, -2).map((link, index) => {
                 return (
@@ -49,7 +81,7 @@ const NavBar = ({
             </ul>
           </div>
           {/* RIGHT NAV */}
-          <div className={`flex   items-center    relative `}>
+          <div className={`flex   items-center    relative  `}>
             {NAV_LINKS.slice(-2).map((link, index) => (
               <div
                 key={index}
@@ -96,21 +128,19 @@ const NavBar = ({
                     {/* SMALL ICON */}
                     {link.name === "Cart" && cartItems.length > 0 && (
                       <div className="absolute rounded-lg bg-orange-500 translate-x-2 -translate-y-7">
-                        {cartItems.map((item: any, index: any) => (
-                          <p
-                            key={index}
-                            className="text-white flex justify-center items-center px-[8px] text-xs"
-                          >
-                            {item.count}
-                          </p>
-                        ))}
+                        <p className="text-white flex justify-center items-center px-[8px] text-xs">
+                          {cartItems.reduce(
+                            (total: number, item: any) => total + item.count,
+                            0
+                          )}
+                        </p>
                       </div>
                     )}
                   </li>
                 </ul>
 
                 {link.name === "Cart" && showCart && (
-                  <div className="bg-green-400 translate-y-4  ">
+                  <div className=" translate-y-4  ">
                     <div className="absolute w-[22rem] pt-5 pb-8 bg-white shadow-2xl border rounded-lg -translate-x-40 text-black ">
                       <p className="pl-3 mb-5 font-bold">Cart</p>
                       <div className="border-t w-full h-full flex justify-center items-center pt-6">

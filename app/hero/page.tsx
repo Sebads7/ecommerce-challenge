@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { collections } from "../constants";
 import Image from "next/image";
 import MySvgClose from "../../public/images/icon-close.svg";
+import SVGRight from "../../public/images/icon-next.svg";
+import SVGLeft from "../../public/images/icon-previous.svg";
 
 const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -10,33 +12,45 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
   const [price, setPrice] = useState(125);
   const [count, setCount] = useState(1);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     const item = {
       title: collections[activeIndex].title,
       price: price,
-      count: count || 1,
+      count: count,
       image: collections[0].LargeImages[activeIndex],
     };
 
     setCartItems((prevItems: any[]) => {
-      const itemExists = prevItems.find(
-        (cartItems) => cartItems.title === item.title
+      const itemIndex = prevItems.findIndex(
+        (cartItems) =>
+          cartItems.title.toLowerCase() === item.title.toLowerCase()
       );
 
-      if (itemExists) {
-        return prevItems.map((cartItems) =>
-          cartItems.title === item.title
-            ? {
-                ...cartItems,
-                count: cartItems.count + count,
-                price: item.price * (cartItems.count + (count || 1)),
-              }
-            : cartItems
-        );
+      if (itemIndex !== -1) {
+        const updatedItems = [...prevItems];
+        updatedItems[itemIndex] = {
+          ...updatedItems[itemIndex],
+          count: updatedItems[itemIndex].count + (count || 1),
+          price: price * (updatedItems[itemIndex].count + (count || 1)),
+        };
+
+        return updatedItems;
       } else {
         return [...prevItems, item];
       }
     });
+
+    try {
+      await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
+      });
+    } catch (err) {
+      console.error("error adding to cart", err);
+    }
   };
 
   // function to handle the decrement of the count
@@ -52,7 +66,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
     setCount(count + 1);
     setPrice(price + 125);
   };
-
+  // function to handle the right click
   const handleModalRightClick = () => {
     setActiveIndex(
       activeIndex + 1 === collections[0].LargeImages.length
@@ -60,7 +74,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
         : activeIndex + 1
     );
   };
-
+  // function to handle the left click
   const handleModalLeftClick = () => {
     setActiveIndex(
       activeIndex - 1 < 0
@@ -70,25 +84,39 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
   };
 
   return (
-    <div className="h-[100vh] ">
-      <div className="container mx-auto grid grid-cols-2 ">
+    <div className="h-[100vh]  ">
+      <div className="sm:container sm:mx-auto sm:grid lg:grid-cols-2  ">
         {/* LEFT SECTION */}
-        <div className="pl-32 pr-28 pt-24  ml-10 ">
-          <div className="grid grid-cols-4  grid-rows-2 gap-8 ">
-            <div className=" w-full h-[30rem] col-span-4 row-span-1 rounded-xl s ">
+        <div className="2xl:pl-32 lg:pl-5  lg:pr-10 md:pr-28  sm:ml-10 lg:ml-0 sm:pt-24 w-full  ">
+          <div className="grid grid-cols-4  lg:grid-rows-2 gap-8 ">
+            <div
+              className="translate-y-[18rem] translate-x-5  z-10 cursor-pointer w-[3rem] h-[3rem]"
+              onClick={handleModalLeftClick}
+            >
+              {/* LEFT BUTTON */}
+              <SVGLeft className="pt-4 pl-4 w-14 h-14 rounded-full bg-white  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+            </div>
+            <div className=" w-full h-[30rem] col-span-4 row-span-1 sm:rounded-xl ">
               <Image
                 src={collections[0]?.LargeImages?.[activeIndex]}
                 width={1000}
                 height={500}
                 alt="product"
-                className="w-full h-full object-cover rounded-xl cursor-zoom-in"
+                className="w-full h-full  object-cover sm:rounded-xl cursor-zoom-in"
                 onClick={() => setOpenModal(true)}
               />
+              {/* RIGHT BUTTON */}
+              <div
+                className="-translate-y-[16rem] -translate-x-5  z-50 cursor-pointer"
+                onClick={handleModalRightClick}
+              >
+                <SVGRight className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+              </div>
             </div>
             {collections[0].smallImages.map((images, index) => (
               <div
                 key={index}
-                className={`h-[6rem]  rounded-xl ${
+                className={`h-[6rem] xs:hidden md:block  rounded-xl ${
                   index === activeIndex ? "border-2 border-orange-400" : ""
                 }`}
               >
@@ -109,30 +137,35 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
 
         {/* RIGHT SECTION */}
         {collections.map((item, index) => (
-          <div key={index} className=" h-[100vh] pt-40 pl-10 ">
+          <div
+            key={index}
+            className=" h-[100vh] xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 sm:pl-10  "
+          >
             <p className="text-dark-grayish-blue font-semibold">
               SNEAKER COMPANY
             </p>
-            <h1 className="text-5xl font-bold  w-[30rem] mt-5 mb-10">
+            <h1 className="xs:text-4xl lg:text-5xl font-bold  w-[30rem] mt-5 xs:mb-5 sm:mb-10">
               {item.title}
             </h1>
-            <p className="w-[29.8rem] mb-5 text-dark-grayish-blue">
+            <p className="sm:w-[29.8rem] mb-6 xs:text-lg leading-7  text-dark-grayish-blue">
               {item.description}
             </p>
-            <div className="flex">
-              <h2 className="text-3xl font-semibold ">${price.toFixed(2)}</h2>
-              <div>
-                <p className="bg-black text-white py-[2px] font-medium justify-center items-center flex px-2 rounded-lg  ml-3 translate-y-2">
-                  {item.discount}%
-                </p>
+            <div className="xs:flex sm:block xs:justify-between  ">
+              <div className="flex">
+                <h2 className="text-3xl font-semibold ">${price.toFixed(2)}</h2>
+                <div>
+                  <p className="bg-black text-white py-[2px] font-medium justify-center items-center flex px-2 rounded-lg  ml-3 xs:translate-y-1 sm:translate-y-2">
+                    {item.discount}%
+                  </p>
+                </div>
               </div>
+              <p className="mt-3 line-through text-dark-grayish-blue font-semibold">
+                ${item.originalPrice?.toFixed(2)}
+              </p>
             </div>
-            <p className="mt-3 line-through text-dark-grayish-blue font-semibold">
-              ${item.originalPrice?.toFixed(2)}
-            </p>
 
-            <div className="flex gap-4 mt-7">
-              <div className="flex justify-center py-4 items-center  bg-light-grayish-blue rounded-lg">
+            <div className="flex sm:flex-row xs:flex-col  gap-4 mt-7">
+              <div className="flex xs:px-2 sm:px-0 xs:justify-between sm:justify-center py-4 items-center  bg-light-grayish-blue rounded-lg">
                 <button
                   className="px-5  h-full"
                   type="button"
@@ -162,7 +195,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
                 </button>
               </div>
               <button
-                className="flex justify-center items-center px-20 rounded-lg bg-primary-orange hover:bg-orange-300 font-semibold"
+                className="flex justify-center items-center xs:py-5 sm px-20 rounded-lg bg-primary-orange hover:bg-orange-300 font-semibold shadow-lg"
                 onClick={() => handleAddToCart()}
               >
                 <span className="mr-2  ">
@@ -181,32 +214,26 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
       </div>
 
       {openModal && (
-        <div className="fixed  inset-0   bg-black/85  drop-shadow-md">
+        <div className="lg:fixed xs:hidden inset-0   bg-black/85  drop-shadow-md">
           <div className="pt-96 -translate-x-10 flex  justify-center items-center w-full h-full ">
             <div
-              className=" -translate-y-[33rem] translate-x-[34rem]  cursor-pointer "
+              className=" -translate-y-[35rem] translate-x-[36rem]  cursor-pointer "
               onClick={() => setOpenModal(false)}
             >
-              <MySvgClose className="fill-current text-white hover:text-orange-400 " />
+              <MySvgClose className="fill-current text-white hover:text-orange-400  w-5 h-5 scale-[1.4]" />
             </div>
             {/* LEFT BUTTON */}
             <div
               className="-translate-y-[16rem] translate-x-5  z-50 cursor-pointer"
               onClick={handleModalLeftClick}
             >
-              <Image
-                src="/images/icon-previous.svg"
-                width={15}
-                height={15}
-                alt="next button"
-                className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue hover:bg-gray-200"
-              />
+              <SVGLeft className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
             </div>
-            <div className="grid grid-cols-4  grid-rows-2 gap-8    ">
-              <div className=" w-full h-[30rem] col-span-4 row-span-1 rounded-xl s ">
+            <div className="grid grid-cols-[repeat(4,_1fr)_0.2fr]   grid-rows-2 gap-8">
+              <div className=" w-full h-[32rem] col-span-5 row-span-1 rounded-xl s ">
                 <Image
                   src={collections[0]?.LargeImages?.[activeIndex]}
-                  width={1000}
+                  width={1200}
                   height={500}
                   alt="product"
                   className="w-full h-full object-cover rounded-xl  "
@@ -216,7 +243,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
               {collections[0].smallImages.map((images, index) => (
                 <div
                   key={index}
-                  className={`h-[6rem]  rounded-xl ${
+                  className={`h-[6rem] grid  rounded-xl translate-x-6   ${
                     index === activeIndex ? "border-2 border-orange-400" : ""
                   }`}
                 >
@@ -225,7 +252,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
                     width={100}
                     height={60}
                     alt="product"
-                    className={`w-full h-full object-cover rounded-xl cursor-pointer ${
+                    className={`w-full h-full justify-items-center items-center center object-cover rounded-xl cursor-pointer ${
                       index === activeIndex
                         ? " opacity-35 "
                         : " hover:opacity-70"
@@ -240,13 +267,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
               className="-translate-y-[16rem] -translate-x-5  z-50 cursor-pointer"
               onClick={handleModalRightClick}
             >
-              <Image
-                src="/images/icon-next.svg"
-                width={15}
-                height={15}
-                alt="next button"
-                className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200"
-              />
+              <SVGRight className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
             </div>
           </div>
         </div>
