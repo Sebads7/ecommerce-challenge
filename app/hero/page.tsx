@@ -84,35 +84,32 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
   };
 
   return (
-    <div className="h-[100vh]  ">
-      <div className="sm:container sm:mx-auto sm:grid lg:grid-cols-2  ">
+    <div className="h-[100dvh]  ">
+      <div className="md:container md:mx-auto md:grid lg:grid-cols-2 w-full  ">
         {/* LEFT SECTION */}
-        <div className="2xl:pl-32 lg:pl-5  lg:pr-10 md:pr-28  sm:ml-10 lg:ml-0 sm:pt-24 w-full  ">
-          <div className="grid grid-cols-4  lg:grid-rows-2 gap-8 ">
-            <div
-              className="translate-y-[18rem] translate-x-5  z-10 cursor-pointer w-[3rem] h-[3rem]"
-              onClick={handleModalLeftClick}
-            >
-              {/* LEFT BUTTON */}
-              <SVGLeft className="pt-4 pl-4 w-14 h-14 rounded-full bg-white  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+        <div className="2xl:pl-32 lg:pl-5  lg:pr-0 md:pr-14  md:ml-10 lg:ml-0 sm:pt-24 w-full ">
+          <div className="grid grid-cols-4  lg:grid-rows-2 gap-8 relative  xs:w-full lg:w-[80%] ">
+            <div className="absolute px-7 translate-y-[12rem]  justify-between w-full md:hidden xs:flex ">
+              <div className="" onClick={handleModalLeftClick}>
+                {/* LEFT BUTTON */}
+                <SVGLeft className="pt-4 pl-4 w-14 h-14 rounded-full bg-white  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+              </div>
+              <div className="" onClick={handleModalRightClick}>
+                <SVGRight className="pt-4 pl-5 w-14 h-14 rounded-full bg-white hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+              </div>
             </div>
-            <div className=" w-full h-[30rem] col-span-4 row-span-1 sm:rounded-xl ">
+            <div className=" w-full h-[30rem] col-span-4 lg:row-span-1 md:rounded-xl ">
               <Image
                 src={collections[0]?.LargeImages?.[activeIndex]}
                 width={1000}
                 height={500}
                 alt="product"
-                className="w-full h-full  object-cover sm:rounded-xl cursor-zoom-in"
+                className="w-full h-full  object-cover md:rounded-xl lg:cursor-zoom-in"
                 onClick={() => setOpenModal(true)}
               />
-              {/* RIGHT BUTTON */}
-              <div
-                className="-translate-y-[16rem] -translate-x-5  z-50 cursor-pointer"
-                onClick={handleModalRightClick}
-              >
-                <SVGRight className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
-              </div>
             </div>
+            {/* RIGHT BUTTON */}
+
             {collections[0].smallImages.map((images, index) => (
               <div
                 key={index}
@@ -139,12 +136,12 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
         {collections.map((item, index) => (
           <div
             key={index}
-            className=" h-[100vh] xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 sm:pl-10  "
+            className=" h-[100vh] xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 xs:ml-0 sm:ml-10 lg:ml-0  "
           >
             <p className="text-dark-grayish-blue font-semibold">
               SNEAKER COMPANY
             </p>
-            <h1 className="xs:text-4xl lg:text-5xl font-bold  w-[30rem] mt-5 xs:mb-5 sm:mb-10">
+            <h1 className="xs:text-4xl lg:text-5xl font-bold  md:w-[30rem] mt-5 xs:mb-5 sm:mb-10">
               {item.title}
             </h1>
             <p className="sm:w-[29.8rem] mb-6 xs:text-lg leading-7  text-dark-grayish-blue">
@@ -165,7 +162,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
             </div>
 
             <div className="flex sm:flex-row xs:flex-col  gap-4 mt-7">
-              <div className="flex xs:px-2 sm:px-0 xs:justify-between sm:justify-center py-4 items-center  bg-light-grayish-blue rounded-lg">
+              <div className="flex xs:px-2 sm:px-0 xs:justify-between sm:justify-center xs:py-5  md:py-4 items-center  bg-light-grayish-blue rounded-lg">
                 <button
                   className="px-5  h-full"
                   type="button"
@@ -214,7 +211,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
       </div>
 
       {openModal && (
-        <div className="lg:fixed xs:hidden inset-0   bg-black/85  drop-shadow-md">
+        <div className="lg:fixed lg:block xs:hidden inset-0  z-50  bg-black/85  drop-shadow-md">
           <div className="pt-96 -translate-x-10 flex  justify-center items-center w-full h-full ">
             <div
               className=" -translate-y-[35rem] translate-x-[36rem]  cursor-pointer "
@@ -227,7 +224,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
               className="-translate-y-[16rem] translate-x-5  z-50 cursor-pointer"
               onClick={handleModalLeftClick}
             >
-              <SVGLeft className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+              <SVGLeft className="w-14 h-14 pl-[18px] pt-[19px] rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
             </div>
             <div className="grid grid-cols-[repeat(4,_1fr)_0.2fr]   grid-rows-2 gap-8">
               <div className=" w-full h-[32rem] col-span-5 row-span-1 rounded-xl s ">
@@ -267,7 +264,7 @@ const Hero = ({ setCartItems }: { cartItems: any; setCartItems: Function }) => {
               className="-translate-y-[16rem] -translate-x-5  z-50 cursor-pointer"
               onClick={handleModalRightClick}
             >
-              <SVGRight className="w-full h-full px-5 py-4 rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
+              <SVGRight className="w-14 h-14 pl-[22px] pt-[19px]  rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
             </div>
           </div>
         </div>
