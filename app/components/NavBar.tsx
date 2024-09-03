@@ -8,44 +8,30 @@ import { FetchCart } from "../lib/fetchCart";
 import MobileSVGBtn from "../../public/images/icon-menu.svg";
 import MySvgClose from "../../public/images/icon-close.svg";
 
-interface CartItem {
-  title: string;
-  price: number;
-  count: number;
-  image: string;
-}
-
-interface NavBarProps {
-  cartItems: CartItem[];
-  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
-}
-
-const NavBar: React.FC<NavBarProps> = ({ cartItems, setCartItems }) => {
+const NavBar = ({
+  cartItems,
+  setCartItems,
+}: {
+  cartItems: any;
+  setCartItems: Function;
+}) => {
   const [showCart, setShowCart] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const cartRef = useRef<HTMLDivElement>(null);
-  const userRef = useRef<HTMLDivElement>(null);
+  const clickRef = useRef<HTMLDivElement>(null);
 
-  const handleCartRef = (e: any) => {
-    if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
+  const handleClickOutside = (e: any) => {
+    if (clickRef.current && !clickRef.current.contains(e.target as Node)) {
       setShowCart(false);
-    }
-  };
-
-  const handleUserRef = (e: any) => {
-    if (userRef.current && !userRef.current.contains(e.target as Node)) {
       setShowUserMenu(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleCartRef);
-    document.addEventListener("mousedown", handleUserRef);
+    document.addEventListener("touchstart", handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleCartRef);
-      document.removeEventListener("mousedown", handleUserRef);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, []);
 
@@ -189,7 +175,7 @@ const NavBar: React.FC<NavBarProps> = ({ cartItems, setCartItems }) => {
                   setShowCart(false);
                 }
               }}
-              ref={cartRef}
+              ref={clickRef}
             >
               <p className="pl-3 mb-5 font-bold">Cart</p>
               <div className="border-t w-full h-full flex justify-center items-center pt-6">
@@ -249,11 +235,9 @@ const NavBar: React.FC<NavBarProps> = ({ cartItems, setCartItems }) => {
         {/* USER MENU  */}
 
         {NAV_LINKS.some((link) => link.name === "User") && showUserMenu && (
-          <div className="w-full  flex sm:justify-end translate-y-[9rem] pr-12   absolute z-50">
-            <div className="xs:w-[100dvw]   sm:w-[15rem] pt-5 pb-8 bg-white shadow-2xl border rounded-lg  text-black">
+          <div className="w-full  flex xs:justify-center md:justify-end xs:translate-y-[11rem]  md:translate-y-[9rem] xs:px-5 md:pr-12   absolute z-50">
+            <div className="xs:w-full   z-50 sm:w-[15rem] pt-5 pb-8 bg-white shadow-2xl border rounded-lg  text-black">
               <div
-                className=""
-                ref={userRef}
                 onMouseLeave={() => {
                   if (
                     NAV_LINKS.some(
@@ -263,13 +247,14 @@ const NavBar: React.FC<NavBarProps> = ({ cartItems, setCartItems }) => {
                     setShowUserMenu(false);
                   }
                 }}
+                ref={clickRef}
               >
-                <ul className="flex flex-col justify-center items-center">
+                <ul className="flex flex-col justify-center items-center z-50">
                   <li className="hover:bg-orange-600 w-full text-center hover:text-white px-3 py-3 font-bold">
                     User: John Doe
                   </li>
                   <li className="hover:bg-orange-600 w-full text-center hover:text-white px-3 py-3">
-                    Sign In
+                    Log Out
                   </li>
                   <li className="hover:bg-orange-600 w-full text-center hover:text-white px-3 py-3">
                     Create Account

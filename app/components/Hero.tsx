@@ -148,7 +148,7 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
         {collections.map((item, index) => (
           <div
             key={index}
-            className="xs:h-[60vh]  xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 xs:ml-0 sm:ml-10 lg:ml-0  "
+            className="xs:h-[80vh]  xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 xs:ml-0 sm:ml-10 lg:ml-0  "
           >
             <p className="text-dark-grayish-blue font-semibold">
               SNEAKER COMPANY
