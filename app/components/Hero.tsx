@@ -5,6 +5,7 @@ import Image from "next/image";
 import MySvgClose from "../../public/images/icon-close.svg";
 import SVGRight from "../../public/images/icon-next.svg";
 import SVGLeft from "../../public/images/icon-previous.svg";
+import { easeInOut, motion } from "framer-motion";
 
 interface CartItem {
   title: string;
@@ -97,10 +98,11 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
 
   return (
     <div className="  ">
-      <div className="md:container md:mx-auto md:grid lg:grid-cols-2 w-full  lg:h-[120vh]  ">
+      <div className="md:container md:mx-auto flex lg:flex-row xs:flex-col w-full justify-center items-center pt-24">
         {/* LEFT SECTION */}
-        <div className="2xl:pl-32 lg:pl-5  lg:pr-0 md:pr-14  md:ml-10 lg:ml-0 sm:pt-24 w-full ">
-          <div className="grid grid-cols-4  lg:grid-rows-2 gap-8 relative  xs:w-full lg:w-[80%] ">
+        <section className=" w-full  2xl:pr-8 lg:pl-24 xl:pl-10 md:px-28 lg:px-0    ">
+          <div className="grid grid-cols-4  lg:grid-rows-2 gap-8 relative lg:pr-14 2xl:pr-24    xl:pl-24">
+            {/* MOBILE BUTTONS */}
             <div className="absolute px-7 translate-y-[12rem]  justify-between w-full md:hidden xs:flex ">
               <div className="" onClick={handleModalLeftClick}>
                 {/* LEFT BUTTON */}
@@ -110,7 +112,7 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
                 <SVGRight className="pt-4 pl-5 w-14 h-14 rounded-full bg-white hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
               </div>
             </div>
-            <div className=" w-full h-[30rem]  col-span-4 lg:row-span-1 md:rounded-xl ">
+            <div className="  h-[30rem]  col-span-4 lg:row-span-1 md:rounded-xl ">
               <Image
                 src={collections[0]?.LargeImages?.[activeIndex]}
                 width={1000}
@@ -125,7 +127,7 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
             {collections[0].smallImages.map((images, index) => (
               <div
                 key={index}
-                className={`h-[6rem] xs:hidden md:block  rounded-xl ${
+                className={`h-[6rem]  xs:hidden md:block  rounded-xl ${
                   index === activeIndex ? "border-2 border-orange-400" : ""
                 }`}
               >
@@ -142,24 +144,24 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* RIGHT SECTION */}
         {collections.map((item, index) => (
-          <div
+          <section
             key={index}
-            className="xs:h-[80vh]  xs:pt-20 lg:pt-40 xs:px-8 sm:px-0 xs:ml-0 sm:ml-10 lg:ml-0  "
+            className="xs:w-full md:w-[65vw] lg:w-[75] xl:w-[95vw] flex flex-col xs:h-[80vh] lg:h-[100vh] px-10 xs:pt-10 lg:pt-0 "
           >
             <p className="text-dark-grayish-blue font-semibold">
               SNEAKER COMPANY
             </p>
-            <h1 className="xs:text-4xl lg:text-5xl font-bold  md:w-[30rem] mt-5 xs:mb-5 sm:mb-10">
+            <h1 className="xs:text-4xl  xl:text-5xl  font-bold xs:w-[25rem]  md:w-[30rem] mt-5 xs:mb-5 sm:mb-10">
               {item.title}
             </h1>
-            <p className="sm:w-[29.8rem] mb-6 xs:text-lg leading-7  text-dark-grayish-blue">
+            <p className="md:w-[26rem] lg:w-[29.8rem] mb-6 xs:text-lg leading-7  text-dark-grayish-blue">
               {item.description}
             </p>
-            <div className="xs:flex sm:block xs:justify-between  ">
+            <div className="xs:flex md:block xs:justify-between  ">
               <div className="flex">
                 <h2 className="text-3xl font-semibold ">${price.toFixed(2)}</h2>
                 <div>
@@ -173,7 +175,7 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
               </p>
             </div>
 
-            <div className="flex sm:flex-row xs:flex-col  gap-4 mt-7">
+            <div className="flex md:flex-row xs:flex-col  gap-4 mt-7">
               <div className="flex xs:px-2 sm:px-0 xs:justify-between sm:justify-center xs:py-5  md:py-4 items-center  bg-light-grayish-blue rounded-lg">
                 <button
                   className="px-5  h-full"
@@ -218,13 +220,25 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
                 Add to cart
               </button>
             </div>
-          </div>
+          </section>
         ))}
       </div>
 
       {openModal && (
         <div className="lg:fixed lg:block xs:hidden inset-0  z-50  bg-black/85  drop-shadow-md">
-          <div className="pt-96 -translate-x-10 flex  justify-center items-center w-full h-full ">
+          <motion.div
+            className="pt-96  flex  justify-center items-center w-full h-full "
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.2,
+              delay: 0.3,
+              ease: easeInOut,
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+            }}
+          >
             <div
               className=" -translate-y-[35rem] translate-x-[36rem]  cursor-pointer "
               onClick={() => setOpenModal(false)}
@@ -278,7 +292,7 @@ const Hero: React.FC<HeroProps> = ({ cartItems, setCartItems }) => {
             >
               <SVGRight className="w-14 h-14 pl-[22px] pt-[19px]  rounded-full bg-light-grayish-blue  hover:bg-gray-200  stroke-black hover:stroke-orange-400 stroke-[3] transition-all ease-linear duration-100" />
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

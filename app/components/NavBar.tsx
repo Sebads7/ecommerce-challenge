@@ -7,6 +7,7 @@ import Image from "next/image";
 import { FetchCart } from "../lib/fetchCart";
 import MobileSVGBtn from "../../public/images/icon-menu.svg";
 import MySvgClose from "../../public/images/icon-close.svg";
+import { motion } from "framer-motion";
 
 const NavBar = ({
   cartItems,
@@ -77,14 +78,14 @@ const NavBar = ({
           <MobileSVGBtn />
         </div>
         {/* LOGO */}
-        <div className="xs:w-full md:w-[14rem] lg:w-[12rem]  ">
+        <div className="xs:w-full md:w-[13rem]   ">
           <Image src="/images/logo.svg" alt="Logo" width={155} height={25} />
         </div>
 
         <nav className="flex   justify-between items-center w-full text-dark-grayish-blue font-light ">
           {/* LEFT NAV */}
           <div className="xs:hidden md:block">
-            <ul className="flex gap-7 ">
+            <ul className="flex gap-9 ">
               {NAV_LINKS.slice(1, -2).map((link, index) => {
                 return (
                   <li key={index} className="relative group">
@@ -104,7 +105,7 @@ const NavBar = ({
           </div>
           {/* RIGHT NAV */}
           <div
-            className={`flex items-center sm:justify-end md:justify-center  sm:w-full lg:w-auto  relative z-10  `}
+            className={`flex items-center xs:justify-end md:justify-center pr-10  xs:w-full lg:w-auto  relative z-10  `}
           >
             {NAV_LINKS.slice(-2).map((link, index) => (
               <div
@@ -164,7 +165,7 @@ const NavBar = ({
         {/* CART DROPDOWN  */}
         {NAV_LINKS.some((link) => link.name === "Cart") && showCart && (
           <div className="absolute z-10 flex sm:justify-end  xs:px-3 xs:pt-[7.5rem] md:pt-5 md:pr-20   w-full  translate-y-[9rem] ">
-            <div
+            <motion.div
               className=" xs:w-[100dvw]   sm:w-[22rem] pt-5 pb-8 bg-white shadow-2xl border rounded-lg  text-black"
               onMouseLeave={() => {
                 if (
@@ -176,6 +177,15 @@ const NavBar = ({
                 }
               }}
               ref={clickRef}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.3,
+                delay: 0.3,
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+              }}
             >
               <p className="pl-3 mb-5 font-bold">Cart</p>
               <div className="border-t w-full h-full flex justify-center items-center pt-6">
@@ -228,15 +238,26 @@ const NavBar = ({
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           </div>
         )}
 
         {/* USER MENU  */}
 
         {NAV_LINKS.some((link) => link.name === "User") && showUserMenu && (
-          <div className="w-full  flex xs:justify-center md:justify-end xs:translate-y-[11rem]  md:translate-y-[9rem] xs:px-5 md:pr-12   absolute z-50">
-            <div className="xs:w-full   z-50 sm:w-[15rem] pt-5 pb-8 bg-white shadow-2xl border rounded-lg  text-black">
+          <div className="w-full  flex xs:justify-center md:justify-end xs:translate-y-[11rem]  md:translate-y-[9rem] xs:px-5 md:pr-20   absolute z-50">
+            <motion.div
+              className="xs:w-full   z-50 sm:w-[15rem] pt-5 pb-8 bg-white shadow-2xl border rounded-lg  text-black"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.3,
+                delay: 0.3,
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+              }}
+            >
               <div
                 onMouseLeave={() => {
                   if (
@@ -261,14 +282,19 @@ const NavBar = ({
                   </li>
                 </ul>
               </div>
-            </div>
+            </motion.div>
           </div>
         )}
 
         {/* MOBILE MENU  */}
         {showMobileMenu && (
           <div className="fixed top-0 w-full h-full bg-black/80 z-50">
-            <div className="h-full w-[60dvw]  bg-white   pl-10">
+            <motion.div
+              className="h-full w-[60dvw]  bg-white   pl-10"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
               <div className=" pt-9 " onClick={() => setShowMobileMenu(false)}>
                 <MySvgClose className="fill-current text-gray-500   w-5 h-5 scale-[1.2]" />
               </div>
@@ -281,7 +307,7 @@ const NavBar = ({
                   );
                 })}
               </ul>
-            </div>
+            </motion.div>
           </div>
         )}
       </div>
